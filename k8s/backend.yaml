@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: simple-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: node:16-alpine
+        command: ["sh", "-c"]
+        args:
+        - |
+          cd /app && 
+          npm install express cors morgan pg pg-hstore sequelize && 
+          node server.js
+        ports:
+        - containerPort: 5000
+        env:
+        - name: PORT
+          value: "5000"
+        - name: KUBERNETES
+          value: "true"
+        - name: DATABASE_URL
+          value: postgres://postgres:example@db:5432/demo
+        volumeMounts:
+        - name: server-js
+          mountPath: /app/server.js
+          subPath: server.js
+      volumes:
+      - name: server-js
+        configMap:
+          name: backend-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: simple-web
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5000
+    targetPort: 5000
+  selector:
+    app: backend

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kubernetes Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kubernetes Demo</h1>
+        
+        <div class="card">
+            <h2>Frontend Container</h2>
+            <p>This is a simple Nginx container serving static content.</p>
+        </div>
+        
+        <div class="card">
+            <h2>Backend Container</h2>
+            <p>The backend is running a Node.js application on port 5000.</p>
+            <p>Try accessing the API at <a href="/api" id="api-link">API Endpoint</a></p>
+        </div>
+        
+        <div class="card">
+            <h2>Database Container</h2>
+            <p>PostgreSQL database is running.</p>
+            <p>Connection string: <code>postgres://postgres:example@db:5432/demo</code></p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Kubernetes Demo - Nginx ↔️ Node.js ↔️ PostgreSQL</p>
+    </div>
+    
+    <script>
+        // Fetch data from the backend API
+        fetch('/api')
+            .then(response => response.json())
+            .then(data => {
+                const apiCard = document.querySelector('.card:nth-child(2)');
+                apiCard.innerHTML += `<div class="api-response"><strong>API Response:</strong> ${JSON.stringify(data)}</div>`;
+            })
+            .catch(error => {
+                console.error('Error fetching API:', error);
+            });
+    </script>
+</body>
+</html>
