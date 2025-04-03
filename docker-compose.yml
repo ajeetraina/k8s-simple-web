@@ -8,11 +8,20 @@ services:
       - "3000:80"
     volumes:
       - ./docker/frontend/html:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      # Use a label to indicate this is a config file, not a directory
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+        volume:
+          nocopy: true
     depends_on:
       - backend
     networks:
       - app-network
+    # Add labels to help compose-bridge
+    labels:
+      io.compose-spec.volume.etc_nginx_conf_d_default_conf: "configmap"
 
   # Backend API Service
   backend:
