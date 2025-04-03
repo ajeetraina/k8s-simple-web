@@ -1,0 +1,9 @@
+rules:
+  - when:
+      service: frontend
+      volume: /etc/nginx/conf.d/default.conf
+    use: configMap
+    configMapName: nginx-config
+    items:
+      - key: nginx.conf
+        path: nginx.conf
